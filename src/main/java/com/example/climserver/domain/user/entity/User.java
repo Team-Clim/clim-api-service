@@ -40,22 +40,20 @@ public class User {
     )
     private String password;
 
-    @Min(1)
-    @Max(4)
+    @Size(max = 4, min = 1)
     @Column(name = "class", nullable = false)
-    private int class_number;
+    private int classNumber;
 
-    @Min(1)
-    @Max(16)
+    @Size(max = 16, min = 1)
     @Column(name = "number", nullable = false)
-    private int personal_number;
+    private int personalNumber;
 
     @Enumerated(EnumType.STRING)    //문자열로 저장 예: FIRST, SECOND
     @Column(nullable = false)
     private Grade grade;
 
     @Column(name = "profile_img_url")
-    private String profile_img_url;
+    private String profileImgUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
