@@ -34,7 +34,7 @@ public class SecurityConfig {
         //경로별 인가 작업 (요청에 대한 권한을 설정)
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/auth/signup").permitAll()
+                        .requestMatchers("/login", "/", "/auth/signup", "/auth/send-verification-code").permitAll()
                         // 해당 경로에 대한 모든 접근을 허용한다.
 
                         .requestMatchers("/admin").hasRole("ADMIN")
