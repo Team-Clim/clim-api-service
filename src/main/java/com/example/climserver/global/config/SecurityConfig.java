@@ -8,42 +8,47 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Bean //비밀 번호를 해시로 암호화 하는데 사용됨
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
 
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http  //csrf disable
+        http  // CSRF 비활성화
                 .csrf(AbstractHttpConfigurer::disable);
 
-        //From 로그인 방식 disable
+        // Form 로그인 방식 비활성화
         http
                 .formLogin(AbstractHttpConfigurer::disable);
 
-        //http basic 인증 방식 disable
+        // HTTP Basic 인증 방식 비활성화
         http
                 .httpBasic(AbstractHttpConfigurer::disable);
 
-        //경로별 인가 작업 (요청에 대한 권한을 설정)
+        // 경로별 인가 작업 (요청에 대한 권한을 설정)
         http
                 .authorizeHttpRequests((auth) -> auth
+                        // 정적 리소스에 대한 접근을 허용
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+
+                        // 로그인, 회원가입, 인증코드 요청 경로는 모두 허용
                         .requestMatchers("/login", "/", "/auth/signup", "/auth/send-verification-code").permitAll()
-                        // 해당 경로에 대한 모든 접근을 허용한다.
 
+                        // "/admin" 경로는 ADMIN 역할만 접근 가능
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        // "/admin"이라는 경로는 역할이 "ADMIN"인 사람만 접근할 수 있다.
 
-                        .anyRequest().authenticated());
-        //그 외 다른 요청에 대해서는 로그인한 사용자만 접근 가능
+                        // 그 외 모든 요청은 인증된 사용자만 접근 가능
+                        .anyRequest().authenticated()
+                );
 
-        //세션 설정 (jwt를 통한 인증/인가를 위해서 세션을 STATELESS 상태로 설정 해야 한다.)
+        // 세션 설정
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
