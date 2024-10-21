@@ -39,7 +39,7 @@ public class AuthController {
         return loginService.login(request);
     }
 
-    @PatchMapping("/reissue")
+    @PostMapping("/re-issue")
     public TokenResponse reissue(RefreshTokenRequest request) {
         return reissueService.reissue(request);
     }

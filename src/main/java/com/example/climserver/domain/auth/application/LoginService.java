@@ -19,6 +19,7 @@ public class LoginService {
     private final JwtTokenProvider jwtTokenProvider;
 
     public TokenResponse login(LoginRequest request) {
+
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 

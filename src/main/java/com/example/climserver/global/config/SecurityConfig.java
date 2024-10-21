@@ -1,17 +1,31 @@
 package com.example.climserver.global.config;
 
+import com.example.climserver.global.security.jwt.JwtTokenProvider;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final JwtTokenProvider jwtTokenProvider;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -19,40 +33,49 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    protected SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
 
-        http  // CSRF 비활성화
-                .csrf(AbstractHttpConfigurer::disable);
+        HttpSecurity with = httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
 
-        // Form 로그인 방식 비활성화
-        http
-                .formLogin(AbstractHttpConfigurer::disable);
+                .cors(cors -> cors
+                        .configurationSource(corsConfigurationSource())
+                )
 
-        // HTTP Basic 인증 방식 비활성화
-        http
-                .httpBasic(AbstractHttpConfigurer::disable);
+                .headers(headers -> {
+                            headers
+                                    .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin
+                                    );
+                        }
+                )
 
-        // 경로별 인가 작업 (요청에 대한 권한을 설정)
-        http
-                .authorizeHttpRequests((auth) -> auth
-                        // 정적 리소스에 대한 접근을 허용
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
 
-                        // 로그인, 회원가입, 인증코드 요청 경로는 모두 허용
-                        .requestMatchers("/login", "/", "/auth/signup", "/auth/send-verification-code").permitAll()
+                .authorizeHttpRequests(authorize -> authorize
 
-                        // "/admin" 경로는 ADMIN 역할만 접근 가능
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers( "/auth/**")
+                        .permitAll()
+                )
 
-                        // 그 외 모든 요청은 인증된 사용자만 접근 가능
-                        .anyRequest().authenticated()
-                );
+                .with(new FilterConfig(jwtTokenProvider, objectMapper), Customizer.withDefaults());
 
-        // 세션 설정
-        http
-                .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        return httpSecurity.build();
 
-        return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(List.of("*")); // 모든 도메인 허용
+        configuration.setAllowedMethods(Arrays.asList( "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE")); // HTTP 메서드 허용
+        configuration.setAllowCredentials(false);
+        configuration.addAllowedHeader("*"); // 모든 헤더 허용
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // 모든 경로에 대해 위에서 설정한 CORS 설정 적용
+        return source;
     }
 }
