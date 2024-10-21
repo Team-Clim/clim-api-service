@@ -10,6 +10,7 @@ import com.example.climserver.domain.user.entity.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +19,7 @@ public class SignupService {
     private final PasswordEncoder passwordEncoder;
     private final VerificationCodeService verificationCodeService;
 
+    @Transactional
     public void signup(SignupRequest request, String verificationCode) {
 
         //이메일 존재 여부
@@ -25,35 +27,22 @@ public class SignupService {
             throw EmailExistException.EXCEPTION;
         }
 
+
         if (!verificationCodeService.verifyCode(request.getEmail(), verificationCode)) {
             throw VerificationFailedException.EXCEPTION;
         }
 
-        //학생 회원가입
-        if (request.getRole() == Role.BASIC) {
-            User user = userRepository.save(
-                    User.builder()
-                            .email(request.getEmail())
-                            .username(request.getUsername())
-                            .password(passwordEncoder.encode(request.getPassword()))
-                            .classNumber(request.getClassNumber())
-                            .personalNumber(request.getPersonalNumber())
-                            .grade(request.getGrade())
-                            .role(Role.BASIC)
-                            .build()
-            );
-        } else if (request.getRole() == Role.ADMIN) {   //선생님 회원가입
-            User user = userRepository.save(
-                    User.builder()
-                            .email(request.getEmail())
-                            .username(request.getUsername())
-                            .password(passwordEncoder.encode(request.getPassword()))
-                            .role(Role.ADMIN)
-                            .build()
-            );
-        } else {
-            throw InvalidRoleException.EXCEPTION;
-        }
+        User user = userRepository.save(
+                User.builder()
+                        .email(request.getEmail())
+                        .username(request.getUsername())
+                        .password(passwordEncoder.encode(request.getPassword()))
+                        .classNumber(request.getClassNumber())
+                        .personalNumber(request.getPersonalNumber())
+                        .grade(request.getGrade())
+                        .role(Role.BASIC)
+                        .build()
+        );
 
         //인증 후 인증 코드 삭제
         verificationCodeService.removeVerificationCode(request.getEmail());

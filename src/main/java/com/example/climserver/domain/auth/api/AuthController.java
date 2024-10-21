@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/send-verification-code")
-    public void sendVerificationCode(@RequestParam(required = true) String email) throws MessagingException {
+    public void sendVerificationCode(@RequestParam String email) throws MessagingException {
         String verificationCode = emailService.sendEmailVerification(email);
         verificationCodeService.saveVerificationCode(email, verificationCode);
     }

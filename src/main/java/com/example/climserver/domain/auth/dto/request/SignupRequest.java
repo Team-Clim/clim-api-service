@@ -18,21 +18,20 @@ public class SignupRequest {
     private String email;
 
     @NotBlank
-    @Size(min = 8, max = 16, message = "비밀번호는 8~16글자 입니다.")
     private String password;
 
     @Min(1)
     @Max(4)
-    @NotBlank
-    private int classNumber;
+    @NotNull
+    private Integer classNumber;
 
     @Min(1)
     @Max(16)
-    @NotBlank
-    private int personalNumber;
+    @NotNull
+    private Integer personalNumber;
 
     @Enumerated(EnumType.STRING)    //문자열로 저장 예: FIRST, SECOND
-    @NotBlank
+    @NotNull
     private Grade grade;
 
     @Enumerated(EnumType.STRING)
