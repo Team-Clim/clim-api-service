@@ -1,10 +1,8 @@
 package com.example.climserver.domain.auth.api;
 
-import com.example.climserver.domain.auth.application.EmailService;
-import com.example.climserver.domain.auth.application.LoginService;
-import com.example.climserver.domain.auth.application.SignupService;
-import com.example.climserver.domain.auth.application.VerificationCodeService;
+import com.example.climserver.domain.auth.application.*;
 import com.example.climserver.domain.auth.dto.request.LoginRequest;
+import com.example.climserver.domain.auth.dto.request.RefreshTokenRequest;
 import com.example.climserver.domain.auth.dto.request.SignupRequest;
 import com.example.climserver.domain.auth.dto.response.TokenResponse;
 import jakarta.mail.MessagingException;
@@ -21,6 +19,7 @@ public class AuthController {
     private final LoginService loginService;
     private final EmailService emailService;
     private final VerificationCodeService verificationCodeService;
+    private final ReissueService reissueService;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup")
@@ -38,5 +37,10 @@ public class AuthController {
     @PostMapping("/login")
     public TokenResponse login(@RequestBody @Valid LoginRequest request) {
         return loginService.login(request);
+    }
+
+    @PatchMapping("/reissue")
+    public TokenResponse reissue(RefreshTokenRequest request) {
+        return reissueService.reissue(request);
     }
 }
