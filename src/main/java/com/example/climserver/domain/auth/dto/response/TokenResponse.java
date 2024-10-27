@@ -12,4 +12,11 @@ public class TokenResponse {
     private String refreshToken;
     private Date accessExpiredAt;
     private Date refreshExpiredAt;
+
+    public TokenResponse(String accessToken, String refreshToken, Date accessExpiredAt, Date refreshExpiredAt) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.accessExpiredAt = accessExpiredAt;
+        this.refreshExpiredAt = refreshExpiredAt;
+    }
 }

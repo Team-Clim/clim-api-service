@@ -40,7 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/re-issue")
-    public TokenResponse reissue(RefreshTokenRequest request) {
+    public TokenResponse reissue(@RequestBody @Valid RefreshTokenRequest request) throws IllegalAccessException {
         return reissueService.reissue(request);
     }
 }

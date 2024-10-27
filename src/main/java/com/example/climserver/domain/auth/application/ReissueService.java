@@ -17,7 +17,12 @@ public class ReissueService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public TokenResponse reissue(RefreshTokenRequest request) {
+    public TokenResponse reissue(RefreshTokenRequest request) throws IllegalAccessException {
+
+        if (request.getToken() == null || request.getToken().isEmpty()) {
+            throw new IllegalAccessException("refreshToken이 null이거나 비어있습니다");
+        }
+
         RefreshToken refreshToken = refreshTokenRepository.findByToken(request.getToken())
                 .orElseThrow(() -> RefreshTokenNotFoundException.EXCEPTION);
         return jwtTokenProvider.receiveToken(refreshToken.getEmail());
