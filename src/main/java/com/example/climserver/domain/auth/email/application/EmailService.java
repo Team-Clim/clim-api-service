@@ -1,4 +1,4 @@
-package com.example.climserver.domain.auth.application;
+package com.example.climserver.domain.auth.email.application;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
