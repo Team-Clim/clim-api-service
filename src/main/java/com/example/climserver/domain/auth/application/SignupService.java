@@ -1,8 +1,10 @@
 package com.example.climserver.domain.auth.application;
 
 import com.example.climserver.domain.auth.dto.request.SignupRequest;
+import com.example.climserver.domain.auth.email.application.CheckEmailService;
+import com.example.climserver.domain.auth.email.application.VerificationCodeService;
+import com.example.climserver.domain.auth.email.application.VerifyVerificationCodeService;
 import com.example.climserver.domain.auth.exception.EmailExistException;
-import com.example.climserver.domain.auth.exception.InvalidRoleException;
 import com.example.climserver.domain.auth.exception.VerificationFailedException;
 import com.example.climserver.domain.user.dao.UserRepository;
 import com.example.climserver.domain.user.entity.User;
@@ -18,19 +20,17 @@ public class SignupService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final VerificationCodeService verificationCodeService;
+    private final CheckEmailService checkEmailService;
+    private final VerifyVerificationCodeService verifyVerificationCodeService;
 
     @Transactional
     public void signup(SignupRequest request, String verificationCode) {
 
         //이메일 존재 여부
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw EmailExistException.EXCEPTION;
-        }
+        checkEmailService.checkEmail(request);
 
-
-        if (!verificationCodeService.verifyCode(request.getEmail(), verificationCode)) {
-            throw VerificationFailedException.EXCEPTION;
-        }
+        //인증 코드 검증
+        verifyVerificationCodeService.verifyVerificationCode(request, verificationCode);
 
         User user = userRepository.save(
                 User.builder()
