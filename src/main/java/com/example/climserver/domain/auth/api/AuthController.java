@@ -5,6 +5,8 @@ import com.example.climserver.domain.auth.dto.request.LoginRequest;
 import com.example.climserver.domain.auth.dto.request.RefreshTokenRequest;
 import com.example.climserver.domain.auth.dto.request.SignupRequest;
 import com.example.climserver.domain.auth.dto.response.TokenResponse;
+import com.example.climserver.domain.auth.email.application.EmailService;
+import com.example.climserver.domain.auth.email.application.VerificationCodeService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final SignupService signupService;
     private final LoginService loginService;
-    private final EmailService emailService;
-    private final VerificationCodeService verificationCodeService;
     private final ReissueService reissueService;
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -27,11 +27,6 @@ public class AuthController {
         signupService.signup(request, verificationCode);
     }
 
-    @PostMapping("/send-verification-code")
-    public void sendVerificationCode(@RequestParam String email) throws MessagingException {
-        String verificationCode = emailService.sendEmailVerification(email);
-        verificationCodeService.saveVerificationCode(email, verificationCode);
-    }
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/login")
