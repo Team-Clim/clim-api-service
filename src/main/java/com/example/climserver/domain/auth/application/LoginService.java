@@ -3,6 +3,7 @@ package com.example.climserver.domain.auth.application;
 import com.example.climserver.domain.auth.dto.request.LoginRequest;
 import com.example.climserver.domain.auth.dto.response.TokenResponse;
 import com.example.climserver.domain.auth.exception.PasswordMismatchException;
+import com.example.climserver.domain.user.application.facade.UserFacade;
 import com.example.climserver.domain.user.dao.UserRepository;
 import com.example.climserver.domain.user.entity.User;
 import com.example.climserver.domain.user.exception.UserNotFoundException;
@@ -17,11 +18,11 @@ public class LoginService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserFacade userFacade;
 
     public TokenResponse login(LoginRequest request) {
 
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> UserNotFoundException.EXCEPTION);
+        User user = userFacade.currentUser();
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword()))
             throw PasswordMismatchException.EXCEPTION;
