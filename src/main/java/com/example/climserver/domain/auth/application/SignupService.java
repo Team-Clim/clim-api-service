@@ -1,11 +1,9 @@
 package com.example.climserver.domain.auth.application;
 
 import com.example.climserver.domain.auth.dto.request.SignupRequest;
-import com.example.climserver.domain.auth.email.application.CheckEmailService;
-import com.example.climserver.domain.auth.email.application.VerificationCodeService;
-import com.example.climserver.domain.auth.email.application.VerifyVerificationCodeService;
-import com.example.climserver.domain.auth.exception.EmailExistException;
-import com.example.climserver.domain.auth.exception.VerificationFailedException;
+import com.example.climserver.domain.email.application.CheckEmailService;
+import com.example.climserver.domain.email.application.VerificationCodeService;
+import com.example.climserver.domain.email.application.VerifyVerificationCodeService;
 import com.example.climserver.domain.user.dao.UserRepository;
 import com.example.climserver.domain.user.entity.User;
 import com.example.climserver.domain.user.entity.enums.Role;

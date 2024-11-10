@@ -1,4 +1,4 @@
-package com.example.climserver.domain.auth.email.application;
+package com.example.climserver.domain.email.application;
 
 import com.example.climserver.domain.auth.dto.request.SignupRequest;
 import com.example.climserver.domain.auth.exception.EmailExistException;

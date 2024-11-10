@@ -22,7 +22,8 @@ public class LoginService {
 
     public TokenResponse login(LoginRequest request) {
 
-        User user = userFacade.currentUser();
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword()))
             throw PasswordMismatchException.EXCEPTION;

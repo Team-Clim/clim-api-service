@@ -1,4 +1,4 @@
-package com.example.climserver.domain.auth.email.application;
+package com.example.climserver.domain.email.application;
 
 import org.springframework.stereotype.Service;
 

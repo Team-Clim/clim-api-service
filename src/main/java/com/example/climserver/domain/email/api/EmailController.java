@@ -1,7 +1,7 @@
-package com.example.climserver.domain.auth.email.api;
+package com.example.climserver.domain.email.api;
 
-import com.example.climserver.domain.auth.email.application.EmailService;
-import com.example.climserver.domain.auth.email.application.VerificationCodeService;
+import com.example.climserver.domain.email.application.EmailService;
+import com.example.climserver.domain.email.application.VerificationCodeService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
