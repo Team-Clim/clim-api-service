@@ -11,49 +11,40 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "id", columnDefinition = "BINARY(16)", unique = true, nullable = false)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "username", nullable = false, length = 50)
+    @Column(name = "username", length = 50)
     private String username;
 
-    @NotBlank
     @Pattern(
             regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
-            message = "Invalid email format"
+            message = "잘못된 email형식입니다."
     )
-    @Column(name = "email", length = 100, nullable = false, unique = true)
+    @Column(name = "email", length = 100, unique = true, nullable = false)
     private String email;
 
-    @NotBlank
-    @Size(min = 8, max = 16, message = "비밀번호는 8~16글자 입니다.")
-    @Pattern(
-            regexp = "^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,16}$",
-            message = "비밀번호는 숫자 하나 이상, 특수문자 하나 이상을 포함해야 하며, 8자에서 16자 사이여야 합니다."
-    )
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Size(max = 4, min = 1)
-    @Column(name = "class", nullable = false)
-    private int classNumber;
+    @Min(1)
+    @Max(4)
+    @Column(name = "class_number", nullable = false)
+    private Integer classNumber;
 
-    @Size(max = 16, min = 1)
+    @Min(1)
+    @Max(16)
     @Column(name = "number", nullable = false)
-    private int personalNumber;
+    private Integer personalNumber;
 
     @Enumerated(EnumType.STRING)    //문자열로 저장 예: FIRST, SECOND
     @Column(nullable = false)
     private Grade grade;
-
-    @Column(name = "profile_img_url")
-    private String profileImgUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

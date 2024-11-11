@@ -15,12 +15,13 @@ public enum ErrorCode {
     INVALID_ROLE(401,"유효 하지 않은 역할입니다."),
 
     //user
+    VERIFICATION_FAILED(401, "인증 코드가 유효 하지 않습니다."),
     EMAIL_EXIST(409,"이미 존재 하는 email입니다."),
-    USER_NOT_FOUND(404, "해당 유저가 존재 하지 않습니다"),
-    USER_MISMATCH(401, "유저가 일치 하지 않습니다"),
-    PASSWORD_MISMATCH(401, "비밀 번호가 일치 하지 않습니다"),
-    INVALID_USER(401, "유효하지 않은 사용자입니다."),
-    USER_EXIST(401, "유저가 이미 존재합니다"),
+    USER_NOT_FOUND(404, "해당 유저가 존재 하지 않습니다."),
+    USER_MISMATCH(401, "유저가 일치 하지 않습니다."),
+    PASSWORD_MISMATCH(401, "비밀 번호가 일치 하지 않습니다."),
+    INVALID_USER(401, "유효 하지 않은 사용자입니다."),
+    USER_EXIST(401, "유저가 이미 존재합니다."),
 
     // general
     BAD_REQUEST(400, "프론트 탓"),
