@@ -2,6 +2,7 @@ package com.example.climserver.domain.user.entity;
 
 import com.example.climserver.domain.user.entity.enums.Grade;
 import com.example.climserver.domain.user.entity.enums.Role;
+import com.example.climserver.domain.user.entity.enums.RoomAlphabet;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -49,4 +50,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RoomAlphabet roomAlphabet;
+
+    @Column(name = "room_number", nullable = false)
+    private Integer roomNumber;
+
 }
