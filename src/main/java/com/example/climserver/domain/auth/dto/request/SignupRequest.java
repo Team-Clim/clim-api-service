@@ -2,6 +2,7 @@ package com.example.climserver.domain.auth.dto.request;
 
 import com.example.climserver.domain.user.entity.enums.Grade;
 import com.example.climserver.domain.user.entity.enums.Role;
+import com.example.climserver.domain.user.entity.enums.RoomAlphabet;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -37,4 +38,11 @@ public class SignupRequest {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private RoomAlphabet roomAlphabet;
+
+    @NotNull
+    private Integer roomNumber;
 }

@@ -39,6 +39,8 @@ public class SignupService {
                         .personalNumber(request.getPersonalNumber())
                         .grade(request.getGrade())
                         .role(Role.BASIC)
+                        .roomAlphabet(request.getRoomAlphabet())
+                        .roomNumber(request.getRoomNumber())
                         .build()
         );
 
