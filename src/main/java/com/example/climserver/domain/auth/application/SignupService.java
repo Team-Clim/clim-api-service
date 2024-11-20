@@ -1,7 +1,6 @@
 package com.example.climserver.domain.auth.application;
 
 import com.example.climserver.domain.auth.dto.request.SignupRequest;
-import com.example.climserver.domain.auth.exception.RoomNumberExistException;
 import com.example.climserver.domain.email.application.CheckEmailService;
 import com.example.climserver.domain.email.application.VerificationCodeService;
 import com.example.climserver.domain.email.application.VerifyVerificationCodeService;
@@ -21,7 +20,7 @@ public class SignupService {
     private final VerificationCodeService verificationCodeService;
     private final CheckEmailService checkEmailService;
     private final VerifyVerificationCodeService verifyVerificationCodeService;
-    private final CheckRoomNumberService checkRoomNumberService;
+    private final CheckRoomAlphabetService checkRoomAlphabetService;
 
     @Transactional
     public void signup(SignupRequest request, String verificationCode) {
@@ -32,8 +31,8 @@ public class SignupService {
         //인증 코드 검증
         verifyVerificationCodeService.verifyVerificationCode(request, verificationCode);
 
-        //호실 존재 여부
-        checkRoomNumberService.CheckRoomNumber(request);
+        //호실의 알파벳 존재 여부
+        checkRoomAlphabetService.checkRoomAlphabet(request);
 
         User user = userRepository.save(
                 User.builder()
@@ -53,3 +52,4 @@ public class SignupService {
         verificationCodeService.removeVerificationCode(request.getEmail());
     }
 }
+

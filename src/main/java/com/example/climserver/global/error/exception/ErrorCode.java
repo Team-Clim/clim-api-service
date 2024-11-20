@@ -22,7 +22,7 @@ public enum ErrorCode {
     PASSWORD_MISMATCH(401, "비밀 번호가 일치 하지 않습니다."),
     INVALID_USER(401, "유효 하지 않은 사용자입니다."),
     USER_EXIST(401, "유저가 이미 존재합니다."),
-    ROOM_NUMBER_EXIST(409, "이미 사용자가 존재 하는 호실입니다."),
+    ROOM_ALPHABET_EXIST(409, "해당 호실에는 알파벳이 존재합니다."),
 
     // general
     BAD_REQUEST(400, "프론트 탓"),
