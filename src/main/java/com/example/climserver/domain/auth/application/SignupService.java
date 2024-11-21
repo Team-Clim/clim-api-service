@@ -20,6 +20,7 @@ public class SignupService {
     private final VerificationCodeService verificationCodeService;
     private final CheckEmailService checkEmailService;
     private final VerifyVerificationCodeService verifyVerificationCodeService;
+    private final CheckRoomAlphabetService checkRoomAlphabetService;
 
     @Transactional
     public void signup(SignupRequest request, String verificationCode) {
@@ -30,6 +31,9 @@ public class SignupService {
         //인증 코드 검증
         verifyVerificationCodeService.verifyVerificationCode(request, verificationCode);
 
+        //호실의 알파벳 존재 여부
+        checkRoomAlphabetService.checkRoomAlphabet(request);
+
         User user = userRepository.save(
                 User.builder()
                         .email(request.getEmail())
@@ -39,6 +43,8 @@ public class SignupService {
                         .personalNumber(request.getPersonalNumber())
                         .grade(request.getGrade())
                         .role(Role.BASIC)
+                        .roomAlphabet(request.getRoomAlphabet())
+                        .roomNumber(request.getRoomNumber())
                         .build()
         );
 
@@ -46,3 +52,4 @@ public class SignupService {
         verificationCodeService.removeVerificationCode(request.getEmail());
     }
 }
+
